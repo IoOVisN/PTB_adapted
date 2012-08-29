@@ -16,7 +16,7 @@ switch fxn
     case 'init',
         
         %kbdinit;
-		ListenChar(1);
+		ListenChar(2);
         
     case 'flush',
         
@@ -26,10 +26,12 @@ switch fxn
     case 'getkey',
         
         %result = kbdgetkey;
-		result = GetChar(0,1);
-        
+		%result = GetChar(0,1);
+        [~,~,result] = KbCheck;
+		result = find(result);
+		
     case 'release',
         
         kbdrelease;
-        ListenChar(2);
+        ListenChar(0);
 end

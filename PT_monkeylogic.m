@@ -504,7 +504,7 @@ AllCodes.CodeNumbers = [];
 % trialtype = 1;                     %SDS trialtype = 1, initialization trial
 % disp(sprintf('<<< PT_MonkeyLogic >>> Starting initialization trial...'))
 % 
-% disable_cursor;
+% %disable_cursor;
 % disable_syskeys;
 % try
 %     for i = 1:length(RunTimeFiles),
@@ -590,7 +590,7 @@ blockcounter = 0;
 TrialRecord.RecentReset = 1;
 TrialRecord.CurrentTrialNumber = 0;
 
-disable_cursor; %SDS:  makes mouse invisible (if menubar override 'Enable mouse/systen keys' is not checked)
+%disable_cursor; %SDS:  makes mouse invisible (if menubar override 'Enable mouse/systen keys' is not checked)
 disable_syskeys;
 try
 %%%%% Start Monkeylogic in escape menu
@@ -2358,24 +2358,25 @@ else
 end
 
 kb = mlkbd('getkey');
+if ~isempty(kb);fprintf('\n--->>>KeyPress: %g\n',kb);end
 remotecommand = any('pqr' == Instruction.Command);
 if startmenu || escapequeued,
-    kb = 25;
+    kb = 80;
     remotecommand = 0;
 end;
 if ~isempty(kb) || remotecommand,
     if remotecommand,
         if Instruction.Command == 'p',
-            kb = 1;
+            kb = 27;
         elseif Instruction.Command == 'r',
-            kb = 57;
+            kb = 32;
         elseif Instruction.Command == 'q',
-            kb = 16;
+            kb = 81;
         end
     end
-    if kb == 19, % "r" for reward
+    if kb == 82, % "r" for reward
         goodmonkey(100);
-    elseif kb == 25 || kb == 1 || remotecommand, % "p" or esc for pause
+    elseif kb == 80 || kb == 27 || remotecommand, % "p" or esc for pause
         
         delete(get(gca, 'children'));
         texth = text(0, 0.22*max(get(gca, 'ylim')), '- Paused -');
@@ -2434,15 +2435,16 @@ if ~isempty(kb) || remotecommand,
         resumeflag = 0;
         t1 = toc;
         while resumeflag == 0,
-            if isempty(kb) || (~(remotecommand && kb == 16) && ~(remotecommand && kb == 57)),
+            if isempty(kb) || (~(remotecommand && kb == 81) && ~(remotecommand && kb == 32)),
                 kb = mlkbd('getkey');
+				if ~isempty(kb);fprintf('\n--->>>KeyPress was: %g\n',kb);end
             end
-            if ~isempty(kb) && kb == 57,
+            if ~isempty(kb) && kb == 32, %32 is space
                 % spacebar to resume
                 resumeflag = 1;
                 delete([texth texth0 texth1 texth2 texth3 texth4 texth5 texth6 texth7]);
                 drawnow;
-            elseif ~isempty(kb) && kb == 18 && EyeSignalInUse,
+            elseif ~isempty(kb) && kb == 112 && EyeSignalInUse, %112 is F1
                 % "e" for eye calibration
                 targetlist = MLConfig.EyeCalibrationTargets;
                 ScreenInfo.EyeOrJoy = 1;
@@ -2453,11 +2455,11 @@ if ~isempty(kb) || remotecommand,
                 clip_cursor(get(fig,'position'));
                 waitfor(fig);
                 unclip_cursor;
-                disable_cursor;
+                %disable_cursor;
 %               ScreenInfo = init_video(ScreenInfo);    % SDS X_MLVIDEO
                 MLConfig.EyeTransform = get(findobj('tag', 'calbutton'), 'userdata');
                 MLConfig.EyeCalibrationTargets = get(findobj('tag', 'eyecaltext'), 'userdata');
-            elseif ~isempty(kb) && kb == 36 && JoystickInUse,
+            elseif ~isempty(kb) && kb == 74 && JoystickInUse, %74 is j
                 % "j" for joystick calibration
                 targetlist = MLConfig.JoystickCalibrationTargets;
                 ScreenInfo.EyeOrJoy = 2;
@@ -2468,11 +2470,11 @@ if ~isempty(kb) || remotecommand,
                 clip_cursor(get(fig,'position'));
                 waitfor(fig);
                 unclip_cursor;
-                disable_cursor;
+                %disable_cursor;
  %              ScreenInfo = init_video(ScreenInfo);    % SDS X_MLVIDEO
                 MLConfig.JoyTransform = get(findobj('tag', 'joycalbutton'), 'userdata');
                 MLConfig.JoystickCalibrationTargets = get(findobj('tag', 'joycaltext'), 'userdata');
-            elseif ~isempty(kb) && kb == 31,
+            elseif ~isempty(kb) && kb == 83, %83 is s
                 % "s" for simulation mode
                 if UserChanges.SimulationMode,
                     set(texth7, 'string', 'Press [S] to turn on simulation mode');
@@ -2481,7 +2483,7 @@ if ~isempty(kb) || remotecommand,
                 end
                 UserChanges.SimulationMode = ~UserChanges.SimulationMode;
                 drawnow;
-            elseif ~isempty(kb) && kb == 32 && EyeSignalInUse,
+            elseif ~isempty(kb) && kb == 68 && EyeSignalInUse %68 is d
                 % "d" for eye Drift correction
                 if MLConfig.OnlineEyeAdjustment,
                     MLConfig.OnlineEyeAdjustment = 0;
@@ -2492,7 +2494,7 @@ if ~isempty(kb) || remotecommand,
                     set(texth5, 'string', 'Press [D] to turn OFF eye drift correction');
                     drawnow;
                 end
-            elseif ~isempty(kb) && kb ==47,
+            elseif ~isempty(kb) && kb == 86 %
                 % "v" for variable editing
                 mlkbd('release');
                 ScreenInfo = close_video(ScreenInfo);
@@ -2500,19 +2502,19 @@ if ~isempty(kb) || remotecommand,
                 VV = get(findobj('tag', 'loadbutton'), 'userdata');
                 changevars(VV);
                 uiwait(findobj('tag', 'edittfvars'));
-                disable_cursor;
+                %disable_cursor;
                 mlkbd('init');
                 figure(findobj('tag', 'mlmonitor'));
 %               ScreenInfo = init_video(ScreenInfo);    % SDS X_MLVIDEO
                 trackvarchanges(TrialRecord.CurrentTrialNumber + 1);
-            elseif ~isempty(kb) && kb == 48,
+            elseif ~isempty(kb) && kb == 66 %
                 % "b" for block change
                 mlkbd('release');
                 ScreenInfo = close_video(ScreenInfo);
                 enable_cursor;
                 chooseblock;
                 uiwait(findobj('tag', 'chooseblock'));
-                disable_cursor;
+                %disable_cursor;
                 b = get(findobj('tag', 'allblocks'), 'userdata');
                 if ~isempty(b),
                     UserChanges.NewBlock = b;
@@ -2520,7 +2522,7 @@ if ~isempty(kb) || remotecommand,
                 mlkbd('init');
                 figure(findobj('tag', 'mlmonitor'));
 %               ScreenInfo = init_video(ScreenInfo);    % SDS X_MLVIDEO
-             elseif ~isempty(kb) && kb == 19,
+             elseif ~isempty(kb) && kb == 82
                 % "r" for reset recent behavior
                 if UserChanges.RecentReset,
                     UserChanges.RecentReset = 0;
@@ -2531,19 +2533,19 @@ if ~isempty(kb) || remotecommand,
                     set(texth3, 'string', 'Press [R] to undo reseting the recent behavior counter');
                     drawnow;
                 end
-            elseif ~isempty(kb) && kb == 45,
+            elseif ~isempty(kb) && kb == 88
                 % "x" for error-handling
                 mlkbd('release');
                 ScreenInfo = close_video(ScreenInfo);
                 enable_cursor;
                 chooseerrorhandling;
                 uiwait(findobj('tag', 'chooseerrorhandling'));
-                disable_cursor;
+                %disable_cursor;
                 UserChanges.ErrorHandler = get(findobj('tag', 'errorlogic'), 'value');
                 mlkbd('init');
                 figure(findobj('tag', 'mlmonitor'));
 %               ScreenInfo = init_video(ScreenInfo);    % SDS X_MLVIDEO
-            elseif ~isempty(kb) && kb == 16,
+            elseif ~isempty(kb) && kb == 81
                 % "q" for quit
                 UserChanges.QuitFlag = 1;
                 set(texth, 'string', '- Stopped -', 'position', [0 0]);
@@ -2567,9 +2569,9 @@ if ~isempty(kb) || remotecommand,
                 remotecommand = any('qr' == Instruction.Command);
                 if remotecommand,
                     if Instruction.Command == 'r',
-                        kb = 57;
+                        kb = 32;
                     elseif Instruction.Command == 'q',
-                        kb = 16;
+                        kb = 82;
                     end
                 end
                 t1 = toc;
@@ -2666,7 +2668,7 @@ thisfig = get(0,'CurrentFigure');
 if ~isempty(thisfig)
     %set(thisfig,'PointerShapeCData',nan(16));                       %SDS:  this pair of commands renders the mouse cursor invisible
     %set(thisfig,'Pointer','custom');
-	HideCursor
+	%HideCursor
 end
 dirs = getpref('MonkeyLogic', 'Directories');
 %system(sprintf('%smlhelper --cursor-disable',dirs.BaseDirectory));  %SDS:  this commands renders the mouse cursor inactive (i.e. frozen) 
@@ -2690,7 +2692,7 @@ if MLHELPER_OFF,
     return
 end
 dirs = getpref('MonkeyLogic', 'Directories');
-system(sprintf('%smlhelper --syskeys-disable',dirs.BaseDirectory));
+%system(sprintf('%smlhelper --syskeys-disable',dirs.BaseDirectory));
 
 function enable_syskeys
 global MLHELPER_OFF
@@ -2719,7 +2721,7 @@ t = sheight-(rect(2)+rect(4));
 r = rect(1)+rect(3);
 b = sheight-rect(2);
 dirs = getpref('MonkeyLogic', 'Directories');
-system(sprintf('%smlhelper --cursor-clip %i %i %i %i',dirs.BaseDirectory,l,t,r,b));
+%system(sprintf('%smlhelper --cursor-clip %i %i %i %i',dirs.BaseDirectory,l,t,r,b));
 
 function unclip_cursor
 global MLHELPER_OFF
@@ -2727,7 +2729,7 @@ if MLHELPER_OFF,
     return
 end
 dirs = getpref('MonkeyLogic', 'Directories');
-system(sprintf('%smlhelper --cursor-unclip',dirs.BaseDirectory));
+%system(sprintf('%smlhelper --cursor-unclip',dirs.BaseDirectory));
 
 function mlhelper_stop
 global MLHELPER_OFF

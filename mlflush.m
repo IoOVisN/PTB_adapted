@@ -2,7 +2,7 @@
 %mlvideo('flush');
 %daqreset;
 Screen('CloseAll');
-sound clear;
+%sound clear;
 fclose all;
 close all;
 clear all;
