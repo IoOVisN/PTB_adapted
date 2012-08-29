@@ -2664,11 +2664,12 @@ if MLHELPER_OFF,
 end
 thisfig = get(0,'CurrentFigure');
 if ~isempty(thisfig)
-    set(thisfig,'PointerShapeCData',nan(16));                       %SDS:  this pair of commands renders the mouse cursor invisible
-    set(thisfig,'Pointer','custom');
+    %set(thisfig,'PointerShapeCData',nan(16));                       %SDS:  this pair of commands renders the mouse cursor invisible
+    %set(thisfig,'Pointer','custom');
+	HideCursor
 end
 dirs = getpref('MonkeyLogic', 'Directories');
-system(sprintf('%smlhelper --cursor-disable',dirs.BaseDirectory));  %SDS:  this commands renders the mouse cursor inactive (i.e. frozen) 
+%system(sprintf('%smlhelper --cursor-disable',dirs.BaseDirectory));  %SDS:  this commands renders the mouse cursor inactive (i.e. frozen) 
 
 function enable_cursor
 global MLHELPER_OFF
@@ -2677,10 +2678,11 @@ if MLHELPER_OFF,
 end
 thisfig = get(0,'CurrentFigure');
 if ~isempty(thisfig)
-    set(thisfig,'Pointer','arrow');
+    %set(thisfig,'Pointer','arrow');
 end
 dirs = getpref('MonkeyLogic', 'Directories');
-system(sprintf('%smlhelper --cursor-enable',dirs.BaseDirectory));
+%system(sprintf('%smlhelper --cursor-enable',dirs.BaseDirectory));
+ShowCursor
 
 function disable_syskeys
 global MLHELPER_OFF

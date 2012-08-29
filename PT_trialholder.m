@@ -333,9 +333,9 @@ posarray = zeros(ltb, 2);
 % ... therefore no action needed here. 
 % SDS X_MLVIDEO_end
 [t currentframe] = trialtime;
-while currentframe == lastframe, %WA: to avoid queueing flips in the same frame
-    [t currentframe] = trialtime;
-end
+% while currentframe == lastframe, %WA: to avoid queueing flips in the same frame %SDS:  PsychToolBox now controls frame rate
+%     [t currentframe] = trialtime;				%SDS:  PsychToolBox amend
+% end											%SDS:  PsychToolBox amend
 
 for i = ltb:-1:1,  %SDS high to low... so low items such as fixation point (=object no.1) get superimposed on anything else     
     ob = TrialObject(i);
@@ -352,21 +352,21 @@ for i = ltb:-1:1,  %SDS high to low... so low items such as fixation point (=obj
             PboxProgName = ob.Name;
             if strcmpi(PboxProgName, 'GAB')
                 if ob.FP1 >= 0                  % SDS   zero is no target; 1 to 8 is target position
-                    feval(PboxProgName, 2, i)   % SDS  (PboxProgName, mode, task object no.) mode 1 = single central gabor; mode 2 = full array
+                    feval(PboxProgName, 2, i);   % SDS  (PboxProgName, mode, task object no.) mode 1 = single central gabor; mode 2 = full array
                 elseif ob.FP1 == -1
-                    feval(PboxProgName, 3, i)   % SDS  (PboxProgName, mode, task object no.) mode 3 = full mask array, COUNTERPHASING GRATING
+                    feval(PboxProgName, 3, i);   % SDS  (PboxProgName, mode, task object no.) mode 3 = full mask array, COUNTERPHASING GRATING
                 elseif ob.FP1 == -2
-                    feval(PboxProgName, 4, i)   % SDS  (PboxProgName, mode, task object no.) mode 4 = full mask array, DRIFTING GRID 
+                    feval(PboxProgName, 4, i);   % SDS  (PboxProgName, mode, task object no.) mode 4 = full mask array, DRIFTING GRID 
                 elseif ob.FP1 == -3
-                    feval(PboxProgName, 5, i)   % SDS  (PboxProgName, mode, task object no.) mode 5 = full mask array, COUNTERPHASING GRID
+                    feval(PboxProgName, 5, i);   % SDS  (PboxProgName, mode, task object no.) mode 5 = full mask array, COUNTERPHASING GRID
                 end
             elseif strcmpi(PboxProgName, 'FXC')
-                feval(PboxProgName, 2, i)
+                feval(PboxProgName, 2, i);
             else
-                feval(PboxProgName, 2, i)
+                feval(PboxProgName, 2, i);
             end
             CoGo = 1;
-            [tflip fn1] = trialtime;      %SDS temp
+         
 % SDS X_MLVIDEO            
 %         elseif ob.Modality == 1, %static video object
 %             mlvideo('blit', ScreenData.Device, ob.Buffer, ob.XsPos, ob.YsPos, ob.Xsize, ob.Ysize);
@@ -470,18 +470,20 @@ end
 % SDS X_MLVIDEO
 if behavioralcode, %WA: syncs the code with the screen flip
 %     mlvideo('waitflip', ScreenData.Device, yrasterthresh);
-      vbl = Screen('Flip', win, vbl + 0.5 * ifi);
       [tflip framenumber] = trialtime;
+      vbl = Screen('Flip', win, vbl + 0.5 * ifi);
+      [tflip fn1] = trialtime;
 %     while ~mlvideo('verticalblank', ScreenData.Device), end
       eventmarker(behavioralcode);
 else %either movie update, cursor re-position, or no behavioral code
 %     mlvideo('flip', ScreenData.Device);
-      vbl = Screen('Flip', win, vbl + 0.5 * ifi);  %SDS here or above, might be a more approp
       [tflip framenumber] = trialtime;
+      vbl = Screen('Flip', win, vbl + 0.5 * ifi);  %SDS here or above, might be a more approp
+      [tflip fn1] = trialtime;
 end
 % SDS X_MLVIDEO_end
 if CoGo
-    fprintf('%i %i %i |*|', currentframe, fn1, framenumber);        %SDS temp - to monitor framenumber across phases of the trial
+    fprintf('%i %i %i |*|', currentframe, framenumber, fn1);        %SDS temp - to monitor framenumber across phases of the trial
 else
     fprintf('%i %i |*|', currentframe, framenumber);  
 end

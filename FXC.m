@@ -78,7 +78,7 @@ end
 radius = radius*h/200;              % 'radius' is distance from screen centre as a percentage of half screen height    
 size = floor(h/size);               % 'size' is the ratio of screen height to cross size (cross length = cross width) : size = bar length
 tk = ceil(size/thckn);              % 'thckn' is the ratio of cross size to cross thickness                           : tk = bar thickness 
-if tk > 10							%  10 is the maximum value allowed by Screen 'Drawline' command
+if tk > 10
 	tk = 10;
 end
 

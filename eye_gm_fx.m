@@ -79,13 +79,13 @@ showcursor('on')        % activate currsor display; showcursor(1)  is equivalent
 A_FIX = eyejoytrack('acquirefix', fixtn_1, fix_radius, wait_for_fix);
 if ~A_FIX,
     trialerror(4); % no fixation
-    toggleobject(fixtn_1)
+    toggleobject(fixtn_1);
     return
 end
 H_FIX = eyejoytrack('holdfix', fixtn_1, fix_radius, flash);
 if ~H_FIX ,
     trialerror(3); % broke fixation
-    toggleobject(fixtn_1)
+    toggleobject(fixtn_1);
     return
 end
 
@@ -94,7 +94,7 @@ toggleobject([fixtn_1 fixtn_2]);    % toggle fixation: fixtn_1 OFF, fixtn_2 ON
 H_FIX = eyejoytrack('holdfix', fixtn_2, fix_radius, flash);  % could also specify fixtn_1 here, as position is the same... 
 if ~H_FIX ,
     trialerror(3); % broke fixation
-    toggleobject(fixtn_2)
+    toggleobject(fixtn_2);
     return
 end
 
@@ -103,7 +103,7 @@ toggleobject([fixtn_1 fixtn_2]);    % toggle fixation: fixtn_1 ON, fixtn_2 OFF
 H_FIX = eyejoytrack('holdfix', fixtn_1, fix_radius, flash);
 if ~H_FIX ,
     trialerror(3); % broke fixation
-    toggleobject(fixtn_1)
+    toggleobject(fixtn_1);
     return
 end
 
@@ -112,18 +112,18 @@ toggleobject([fixtn_1 fixtn_2]);    % toggle fixation: fixtn_1 OFF, fixtn_2 ON
 H_FIX = eyejoytrack('holdfix', fixtn_2, fix_radius, flash);
 if ~H_FIX ,
     trialerror(3); % broke fixation
-    toggleobject(fixtn_2)
+    toggleobject(fixtn_2);
     return
 end
 
-toggleobject([fixtn_1 fixtn_2 gabors]) % toggle fixation:  fixtn_1 & gabors ON
+toggleobject([fixtn_1 fixtn_2 gabors]); % toggle fixation:  fixtn_1 & gabors ON
 % showcursor('on')  % not necessary to turn on again; 'showcursor' controls a persistent flag within eyejoytrack
 
 A_TAR = eyejoytrack('acquirefix', gabors, fix_radius,max_reaction_time);
 if ~A_TAR,
     trialerror(2); % no or late response (did not land on either the target or distractor)
     disp('error: did not acquire any target')
-    toggleobject([fixtn_1 gabors]) %ALL OFF
+    toggleobject([fixtn_1 gabors]); %ALL OFF
     return
 % elseif A_TAR ==2 || A_TAR ==3 || A_TAR ==4  % NB this is the ordinal position of the chosen item in the items vector
 % elseif A_TAR ==1   % see NOTE A
@@ -131,39 +131,39 @@ if ~A_TAR,
 elseif A_TAR == target_item               % see NOTE B
     disp('OK: acquired target')
     trialerror(0);  % "correct"
-    toggleobject([gabors mask])           % gabors off, mask on
+    toggleobject([gabors mask]);           % gabors off, mask on
     H_DEC = eyejoytrack('holdfix', mask, fix_radius, hold_target_time);
     if ~H_DEC,
         trialerror(5); % broke fixation
-        toggleobject([fixtn_1 mask]) %ALL OFF
+        toggleobject([fixtn_1 mask]); %ALL OFF
         return
     end
     toggleobject([fixtn_1 fixtn_2]);    % toggle fixation: fixtn_1 OFF, fixtn_2 ON
     eyejoytrack('idle',2000)
-    toggleobject([fixtn_2 mask])  %ALL OFF
+    toggleobject([fixtn_2 mask]);  %ALL OFF
     
 else  % i.e A_TAR == any other item, i.e a decoy  
     disp('OK: acquired NON-target')
     trialerror(6);  % "incorrect"
-    toggleobject([gabors mask])         % gabors off, mask on
+    toggleobject([gabors mask]);         % gabors off, mask on
     H_DEC = eyejoytrack('holdfix', mask, fix_radius, hold_target_time);
     if ~H_DEC,
         trialerror(5); % broke fixation
-        toggleobject([fixtn_1 mask]) %ALL OFF
+        toggleobject([fixtn_1 mask]); %ALL OFF
         return
     end
-    eyejoytrack('idle',1000)
-    toggleobject([fixtn_1 fixtn_c mask])   % Switch Fixation & mask OFF;
-    eyejoytrack('idle',500)            % ...this to distinguish error trial from correct trial
-    toggleobject([fixtn_1 fixtn_c])
-    eyejoytrack('idle',500)            % ...this to distinguish error trial from correct trial
-    toggleobject([fixtn_1 fixtn_c])
-    eyejoytrack('idle',500)            % ...this to distinguish error trial from correct trial
-    toggleobject([fixtn_1 fixtn_c])
-    eyejoytrack('idle',500)            % ...this to distinguish error trial from correct trial
-    toggleobject([fixtn_1 fixtn_c])
-    eyejoytrack('idle',500)
-    toggleobject([fixtn_c])            % switch off
+    eyejoytrack('idle',1000);
+    toggleobject([fixtn_1 fixtn_c mask]);   % Switch Fixation & mask OFF;
+    eyejoytrack('idle',500);            % ...this to distinguish error trial from correct trial
+    toggleobject([fixtn_1 fixtn_c]);
+    eyejoytrack('idle',500);            % ...this to distinguish error trial from correct trial
+    toggleobject([fixtn_1 fixtn_c]);
+    eyejoytrack('idle',500);            % ...this to distinguish error trial from correct trial
+    toggleobject([fixtn_1 fixtn_c]);
+    eyejoytrack('idle',500);            % ...this to distinguish error trial from correct trial
+    toggleobject([fixtn_1 fixtn_c]);
+    eyejoytrack('idle',500);
+    toggleobject([fixtn_c]);            % switch off
 end
     
 %     
