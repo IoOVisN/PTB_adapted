@@ -32,6 +32,6 @@ switch fxn
 		
     case 'release',
         
-        kbdrelease;
-        ListenChar(0);
+		ListenChar(0);
+       %kbdrelease;
 end

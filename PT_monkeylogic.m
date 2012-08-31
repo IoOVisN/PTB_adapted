@@ -410,7 +410,7 @@ drawnow;
 goodmonkey(-1,DaqInfo);
 
 % Initialize keyboard
-mlkbd('init');
+PT_mlkbd('init');
 
 % Initialize PsychToolBox     % SDS ADDED EXTRA
 disp(sprintf('<<< PT_MonkeyLogic >>> Initialising PsychToolBox... Putting up display screen'))
@@ -559,7 +559,7 @@ if thisisonlyatest,
         varargout{1} = [];
         return
     end
-    mlkbd('release');
+    PT_mlkbd('release');
     close_video(ScreenInfo);
     close_daq(DaqInfo);
     fclose(fidbhv);
@@ -1355,7 +1355,7 @@ end
 
 
 % Close keyboard
-mlkbd('release');
+PT_mlkbd('release');
 
 % SDS X_MLVIDEO
 % Close Video
@@ -2141,7 +2141,7 @@ copyfile(file, mldirectories.RunTimeDirectory);
 function error_escape(ScreenInfo, DaqInfo, fidbhv)
 
 prtnormal;
-mlkbd('release');
+PT_mlkbd('release');
 % SDS X_MLVIDEO
 % mlvideo('showcursor', ScreenInfo.Device, 1);
 % SDS X_MLVIDEO_end
@@ -2357,8 +2357,8 @@ else
     EditVarsInUse = 0;
 end
 
-kb = mlkbd('getkey');
-if ~isempty(kb);fprintf('\n--->>>KeyPress: %g\n',kb);end
+kb = PT_mlkbd('getkey');
+if ~isempty(kb);fprintf('\n--->>>KeyPress: %g - %s\n',kb, which('PT_mlkbd.m'));end
 remotecommand = any('pqr' == Instruction.Command);
 if startmenu || escapequeued,
     kb = 80;
@@ -2436,8 +2436,8 @@ if ~isempty(kb) || remotecommand,
         t1 = toc;
         while resumeflag == 0,
             if isempty(kb) || (~(remotecommand && kb == 81) && ~(remotecommand && kb == 32)),
-                kb = mlkbd('getkey');
-				if ~isempty(kb);fprintf('\n--->>>KeyPress was: %g\n',kb);end
+                kb = PT_mlkbd('getkey');
+				if ~isempty(kb);fprintf('\n--->>>2nd KeyPress: %g - %s\n',kb, which('PT_mlkbd.m'));end
             end
             if ~isempty(kb) && kb == 32, %32 is space
                 % spacebar to resume
@@ -2496,20 +2496,20 @@ if ~isempty(kb) || remotecommand,
                 end
             elseif ~isempty(kb) && kb == 86 %
                 % "v" for variable editing
-                mlkbd('release');
+                PT_mlkbd('release');
                 ScreenInfo = close_video(ScreenInfo);
                 enable_cursor;
                 VV = get(findobj('tag', 'loadbutton'), 'userdata');
                 changevars(VV);
                 uiwait(findobj('tag', 'edittfvars'));
                 %disable_cursor;
-                mlkbd('init');
+                PT_mlkbd('init');
                 figure(findobj('tag', 'mlmonitor'));
 %               ScreenInfo = init_video(ScreenInfo);    % SDS X_MLVIDEO
                 trackvarchanges(TrialRecord.CurrentTrialNumber + 1);
             elseif ~isempty(kb) && kb == 66 %
                 % "b" for block change
-                mlkbd('release');
+                PT_mlkbd('release');
                 ScreenInfo = close_video(ScreenInfo);
                 enable_cursor;
                 chooseblock;
@@ -2519,7 +2519,7 @@ if ~isempty(kb) || remotecommand,
                 if ~isempty(b),
                     UserChanges.NewBlock = b;
                 end
-                mlkbd('init');
+                PT_mlkbd('init');
                 figure(findobj('tag', 'mlmonitor'));
 %               ScreenInfo = init_video(ScreenInfo);    % SDS X_MLVIDEO
              elseif ~isempty(kb) && kb == 82
@@ -2535,14 +2535,14 @@ if ~isempty(kb) || remotecommand,
                 end
             elseif ~isempty(kb) && kb == 88
                 % "x" for error-handling
-                mlkbd('release');
+                PT_mlkbd('release');
                 ScreenInfo = close_video(ScreenInfo);
                 enable_cursor;
                 chooseerrorhandling;
                 uiwait(findobj('tag', 'chooseerrorhandling'));
                 %disable_cursor;
                 UserChanges.ErrorHandler = get(findobj('tag', 'errorlogic'), 'value');
-                mlkbd('init');
+                PT_mlkbd('init');
                 figure(findobj('tag', 'mlmonitor'));
 %               ScreenInfo = init_video(ScreenInfo);    % SDS X_MLVIDEO
             elseif ~isempty(kb) && kb == 81
@@ -2670,7 +2670,7 @@ if ~isempty(thisfig)
     %set(thisfig,'Pointer','custom');
 	%HideCursor
 end
-dirs = getpref('MonkeyLogic', 'Directories');
+%dirs = getpref('MonkeyLogic', 'Directories');
 %system(sprintf('%smlhelper --cursor-disable',dirs.BaseDirectory));  %SDS:  this commands renders the mouse cursor inactive (i.e. frozen) 
 
 function enable_cursor
@@ -2682,7 +2682,7 @@ thisfig = get(0,'CurrentFigure');
 if ~isempty(thisfig)
     %set(thisfig,'Pointer','arrow');
 end
-dirs = getpref('MonkeyLogic', 'Directories');
+%dirs = getpref('MonkeyLogic', 'Directories');
 %system(sprintf('%smlhelper --cursor-enable',dirs.BaseDirectory));
 ShowCursor
 
@@ -2691,7 +2691,7 @@ global MLHELPER_OFF
 if MLHELPER_OFF,
     return
 end
-dirs = getpref('MonkeyLogic', 'Directories');
+%dirs = getpref('MonkeyLogic', 'Directories');
 %system(sprintf('%smlhelper --syskeys-disable',dirs.BaseDirectory));
 
 function enable_syskeys
@@ -2699,8 +2699,8 @@ global MLHELPER_OFF
 if MLHELPER_OFF,
     return
 end
-dirs = getpref('MonkeyLogic', 'Directories');
-system(sprintf('%smlhelper --syskeys-enable',dirs.BaseDirectory));
+%dirs = getpref('MonkeyLogic', 'Directories');
+%system(sprintf('%smlhelper --syskeys-enable',dirs.BaseDirectory));
 
 function clip_cursor(varargin)
 global MLHELPER_OFF
@@ -2720,7 +2720,7 @@ l = rect(1);
 t = sheight-(rect(2)+rect(4));
 r = rect(1)+rect(3);
 b = sheight-rect(2);
-dirs = getpref('MonkeyLogic', 'Directories');
+%dirs = getpref('MonkeyLogic', 'Directories');
 %system(sprintf('%smlhelper --cursor-clip %i %i %i %i',dirs.BaseDirectory,l,t,r,b));
 
 function unclip_cursor
@@ -2728,7 +2728,7 @@ global MLHELPER_OFF
 if MLHELPER_OFF,
     return
 end
-dirs = getpref('MonkeyLogic', 'Directories');
+%dirs = getpref('MonkeyLogic', 'Directories');
 %system(sprintf('%smlhelper --cursor-unclip',dirs.BaseDirectory));
 
 function mlhelper_stop
@@ -2736,8 +2736,8 @@ global MLHELPER_OFF
 if MLHELPER_OFF,
     return
 end
-dirs = getpref('MonkeyLogic', 'Directories');
-system(sprintf('%smlhelper --stop',dirs.BaseDirectory));
+%dirs = getpref('MonkeyLogic', 'Directories');
+%system(sprintf('%smlhelper --stop',dirs.BaseDirectory));
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2812,7 +2812,7 @@ end
 
 Eyelink('Command', 'binocular_enabled=YES');        %SDS Colin prog
 
-[v vs] = Eyelink('GetTrackerVersion');                                        %SDS: PTB 'example'
+[v vs] = c('GetTrackerVersion');                                        %SDS: PTB 'example'
 fprintf('Running experiment on a ''%s'' tracker.\n', vs );                  %SDS: PTB 'example'
 
 % make sure that we get gaze data from the Eyelink                          %SDS: PTB 'example'

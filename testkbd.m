@@ -4,16 +4,11 @@ try
 	result = 0;
 	FlushEvents;
 	tic
-	while result ~= 81
+	while result ~= 32
 		%result = GetChar(0,1);
-		[~,~,result] = KbCheck;
-		result = find(result);
+		[~,~,result] = KbCheck; result = find(result);
 		if ~isempty(result)
 			fprintf('Char is: %g\n',result);
-		elseif result == 81
-			fprintf('\nWe HAD A HIT\n');
-		else
-			
 		end
 		FlushEvents;
 		if isempty(result)
@@ -35,13 +30,13 @@ ListenChar(0);
 % 	disp('Test SVI...')
 % 	kbdinit;
 % 	result = -1;
-% 	while result ~= 19
-% 		kbdflush;
-% 		fprintf('.');
+% 	while (result ~= 16) || (result ~= 81)
+% 		result = -1;
 % 		result = mlkbd('getkey');
 % 		if ~isempty(result)
-% 			fprintf('Char is: %g\n',result);
+% 			fprintf('SVI Char is: %g\n',result);
 % 		end
+% 		kbdflush;
 % 	end
 % 	
 % catch ME
@@ -50,5 +45,5 @@ ListenChar(0);
 % 	rethrow(ME);
 % 	
 % end
-
-kbdrelease;
+% 
+% kbdrelease;
