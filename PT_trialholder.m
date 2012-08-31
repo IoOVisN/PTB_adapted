@@ -352,7 +352,11 @@ for i = ltb:-1:1,  %SDS high to low... so low items such as fixation point (=obj
             PboxProgName = ob.Name;
             if strcmpi(PboxProgName, 'GAB')
                 if ob.FP1 >= 0                  % SDS   zero is no target; 1 to 8 is target position
-                    feval(PboxProgName, 2, i);   % SDS  (PboxProgName, mode, task object no.) mode 1 = single central gabor; mode 2 = full array
+					if strcmpi(ob.Class,'dpr')
+						feval(PboxProgName, 3, i);   % SDS  (PboxProgName, mode, task object no.) mode 1 = single central gabor; mode 2 = full array
+					else
+						feval(PboxProgName, 2, i);   % SDS  (PboxProgName, mode, task object no.) mode 1 = single central gabor; mode 2 = full array
+					end
                 elseif ob.FP1 == -1
                     feval(PboxProgName, 3, i);   % SDS  (PboxProgName, mode, task object no.) mode 3 = full mask array, COUNTERPHASING GRATING
                 elseif ob.FP1 == -2
